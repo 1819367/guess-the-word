@@ -10,7 +10,7 @@ const playerGuesses = [];  //empty arry to hold the player guesses
 
 let word = "magnolia"; //initial word string.
 
-const guessedLetters = []; //empty array to hold all the letters the player guesses
+let guessedLetters = []; //empty array to hold all the letters the player guesses
 
 let remainingGuesses = 8; //variable to set the maximum number of guesses
 
@@ -50,14 +50,18 @@ getWord(word);
 //Add an event listener for the button, add an event parameter in the function
 button.addEventListener("click", function (e) {
     e.preventDefault(); //to prevent reloading of the form
+    
+    message.innerText = ""; //to clear the message paragraph
 
-    const guess = textInput.value;
-    console.log(guess);
-    textInput.value = ""; //to clear the input box
-
+    const guess = textInput.value; //to grab what was entered in the input
+    
     const goodInput = checkInput(guess); //Call function and pass it the input value, save it to a variable
-    console.log(goodInput);
+    // console.log(goodInput); //to test the output
+
+    if (goodInput) {
     makeGuess(guess);
+    };
+    textInput.value = ""; //to clear the input box
 });
 
 //Function to check player's input
@@ -121,6 +125,7 @@ const showWordInProgress = function (guessedLetters) {
     };
     wordInProgress.innerText = revealWord.join("");
     checkIfWin();
+    starOver();
 };
 
 //function to count guesses remaining
@@ -151,8 +156,37 @@ const checkIfWin = function () {
     }
 };
 
+//funciton to Play it Again
+const starOver = function () {
+    if (wordInProgress.innerText === word.toUpperCase()) {  //if player wins
+        button.classList.add("hide"); // hiding the guess button
+        remainingGuessesElement.classList.add("hide"); // hiding paragraph where remaining guesses display
+        guessedLettersElement.classList.add("hide"); //hiding list where guessed letters appear
+        hiddenButton.classList.remove("hide"); //showing the play again button
+    } else if (remainingGuesses === 0) { //if player loses
+        button.classList.add("hide"); // hiding the guess button
+        remainingGuessesElement.classList.add("hide"); // hiding paragraph where remaining guesses display
+        guessedLettersElement.classList.add("hide"); //hiding list where guessed letters appear
+        hiddenButton.classList.remove("hide"); //showing the play again button
+    }
+};
 
+//Add an event listener to the Play Again hidden button to start the game over
+hiddenButton.addEventListener("click", function() {
+    message.classList.remove("win");//remove the class of "win" tothe message element
+    message.innerText = ""; //to empty the message text
+    guessedLettersElement.innerText = "";//to empty the unordered list
+    
+    remainingGuesses = 8; //reset the number of guesses
+    guessedLetters = []; //reset this variable to an empty array
+    guessesLeft.innerText = `${remainingGuesses} guesses`;//populate the span inside the P with the # of guesses
 
+    button.classList.remove("hide"); //remove hide and show the guess button
+    remainingGuessesElement.classList.remove("hide"); //remove hide and show the paragraph where remaining guesses display
+    guessedLettersElement.classList.remove("hide"); //remove hide and show list where guessed letters appear
+    hiddenButton.classList.add("hide"); //add hide to the play again button
 
+    getWord(); //call the async function to get the new word
+});
 
 
