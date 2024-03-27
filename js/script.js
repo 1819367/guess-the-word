@@ -125,7 +125,7 @@ const showWordInProgress = function (guessedLetters) {
     };
     wordInProgress.innerText = revealWord.join("");
     checkIfWin();
-    starOver();
+    startOver();
 };
 
 //function to count guesses remaining
@@ -133,13 +133,12 @@ const updateGuessesLeft = function(guess) {
     const upperWord = word.toUpperCase();
 
     if (!upperWord.includes(guess)) {
-        message.innerText = `The word doesn't containing the letter ${guess}`;
+        message.innerText = `Sorry, the word doesn't contain the letter ${guess}.`;
         remainingGuesses -= 1;
     } else {
-        message.innerText = `The word contains the letter ${guess}`;
+        message.innerText = `Good Guess! The word contains the letter ${guess}.`;
     }
     if (remainingGuesses === 0) {
-        remainingGuessesElement.innerText = `You have no guesses remaining.`;
         message.innerHTML = `Game over! The word was <span class="highlight">${word}!</span>`;
     } else if (remainingGuesses === 1) {
         guessesLeft.innerText = `${remainingGuesses} guess`;
@@ -153,11 +152,12 @@ const checkIfWin = function () {
     if (wordInProgress.innerText === word.toUpperCase()) {
         message.classList.add("win");
         message.innerHTML = `<p class="highlight">"You've guessed the correct word! Congratulations!</p>`;
+        startOver();
     }
 };
 
 //funciton to Play it Again
-const starOver = function () {
+const startOver = function () {
     if (wordInProgress.innerText === word.toUpperCase()) {  //if player wins
         button.classList.add("hide"); // hiding the guess button
         remainingGuessesElement.classList.add("hide"); // hiding paragraph where remaining guesses display
@@ -175,7 +175,7 @@ const starOver = function () {
 hiddenButton.addEventListener("click", function() {
     message.classList.remove("win");//remove the class of "win" tothe message element
     message.innerText = ""; //to empty the message text
-    guessedLettersElement.innerText = "";//to empty the unordered list
+    guessedLettersElement.innerHTML = "";//to empty the unordered list
     
     remainingGuesses = 8; //reset the number of guesses
     guessedLetters = []; //reset this variable to an empty array
