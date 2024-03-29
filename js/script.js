@@ -20,32 +20,31 @@ const getWord = async function () {
     const words = await request.text();
     // console.log(words); //logs out the list of fetched words
 
-    const wordArray = words.split("\n");
-    const randomIndex = Math.floor(Math.random() * wordArray.length);
-    // console.log(randomIndex); //for test puposes only
-    let randomWord = wordArray[randomIndex];
-    console.log(randomWord); //logs out the random word
+    const wordArray = words.split("\n"); //transforms data into an array separated by a newline
 
-    randomWord = randomWord.trim();
-    word = randomWord;
+    const randomIndex = Math.floor(Math.random() * wordArray.length);//creates a variable to pull a random index
+    // console.log(randomIndex); //for test puposes only
+
+    word = wordArray[randomIndex].trim(); //refactored code
+    console.log(word); //logs out the random word
 
     placeholder(word);
 };
  
-// getWord();
+// Call the function and pass it the word variable.  Fire off the game
+getWord(word);
 
 //Create a function to Add Placholders for Each Letter
 const placeholder = function (word) {
     const ltrArry = [];
+
     for (let letter of word) {
         // console.log(letter); //to test loop
-        ltrArry.push("●");
+        ltrArry.push("●"); //pushes the circle symbol to the empty array, one for each character of the string
     }
-    wordInProgress.innerText = ltrArry.join("");
+    
+    wordInProgress.innerText = ltrArry.join(""); //joins array elements into a string in the innerText of wordInProgress
 };
-
-// Call the function and pass it the word variable
-getWord(word);
 
 //Add an event listener for the button, add an event parameter in the function
 button.addEventListener("click", function (e) {
@@ -61,19 +60,25 @@ button.addEventListener("click", function (e) {
     if (goodInput) {
     makeGuess(guess);
     };
+
     textInput.value = ""; //to clear the input box
 });
 
 //Function to check player's input
 const checkInput = function (input) {
     const acceptedLetter = /[a-zA-Z]/;
+
     if (input.length === 0) {
         message.innerText = "Please enter a letter.";
+
     } else if (input.length > 1) {
         message.innerText = "Try again.  One letter only at a time.";
+
     } else if (!input.match(acceptedLetter)) {
         message.innerText = "Please enter a letter from A to Z.";
+
     } else {
+
         return input;
     }
 };
@@ -81,8 +86,10 @@ const checkInput = function (input) {
 //Create a function to capture the guessed letter    
 const makeGuess = function(guess) {
     guess = guess.toUpperCase();
+
     if (guessedLetters.includes(guess)) {
         message.innerText = `You already guessed that letter. Try Again.`;
+
     } else {
         guessedLetters.push(guess);
         console.log(guessedLetters);
@@ -117,8 +124,10 @@ const showWordInProgress = function (guessedLetters) {
 
     const revealWord = [];
     for (let letter of wordArray) {
+
         if (guessedLetters.includes(letter)) {
             revealWord.push(letter.toUpperCase());
+
         } else {
             revealWord.push("●");
         }
@@ -135,13 +144,16 @@ const updateGuessesLeft = function(guess) {
     if (!upperWord.includes(guess)) {
         message.innerText = `Sorry, the word doesn't contain the letter ${guess}.`;
         remainingGuesses -= 1;
+
     } else {
         message.innerText = `Good Guess! The word contains the letter ${guess}.`;
     }
     if (remainingGuesses === 0) {
         message.innerHTML = `Game over! The word was <span class="highlight">${word}!</span>`;
+
     } else if (remainingGuesses === 1) {
         guessesLeft.innerText = `${remainingGuesses} guess`;
+
     } else {
         guessesLeft.innerText = `${remainingGuesses} guesses`;
     }
@@ -156,13 +168,15 @@ const checkIfWin = function () {
     }
 };
 
-//funciton to Play it Again
+//function to Play it Again
 const startOver = function () {
+
     if (wordInProgress.innerText === word.toUpperCase()) {  //if player wins
         button.classList.add("hide"); // hiding the guess button
         remainingGuessesElement.classList.add("hide"); // hiding paragraph where remaining guesses display
         guessedLettersElement.classList.add("hide"); //hiding list where guessed letters appear
         hiddenButton.classList.remove("hide"); //showing the play again button
+
     } else if (remainingGuesses === 0) { //if player loses
         button.classList.add("hide"); // hiding the guess button
         remainingGuessesElement.classList.add("hide"); // hiding paragraph where remaining guesses display
